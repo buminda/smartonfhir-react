@@ -20,6 +20,7 @@ export class Launch extends Component {
             count: 0
         }
         this.createRoom = this.createRoom.bind(this);
+        this.grant = this.grant.bind(this);
         this.createRoom();        
     }
 
@@ -27,6 +28,22 @@ export class Launch extends Component {
        await     this.loadConformance();
         await this.getAuthCode();
         localStorage.setItem("launchData", JSON.stringify(this.state));
+    }
+
+    async grant() {
+        console.log(JSON.stringify(this.state));
+        window.location.href = this.state.authenticateFullUri;
+    }
+
+    async decode() {
+        let paramString = this.authenticateFullUri.split('?')[1];
+        let paramsArray = paramString.split('&');
+
+        for (let i = 0; i < paramsArray.length; i++) {
+            let pair = paramsArray[i].split('=');
+            console.log("Key is:", pair[0]);
+            console.log("Value is:", pair[1]);
+        }
     }
 
     async loadConformance() {
@@ -75,18 +92,31 @@ export class Launch extends Component {
             "launch=" + this.state.launch + "&" +
             "state=" + state;
         this.setState({ authenticateFullUri: authenticateFullUri });
-        window.location.href = authenticateFullUri;
+
+        //window.location.href = authenticateFullUri;
     }
 
     render() {
         return (
             <div>
-                <button className="btn btn-primary" onClick={this.createRoom}>Laucn Data</button>                
+                <span >Lauch Data</span>      
+                <br />
+                <br />
                 <p aria-live="polite">ISS: <strong>{this.state.iss}</strong></p>
                 <p aria-live="polite">Launch: <strong>{this.state.launch}</strong></p>
                 <p aria-live="polite">Auth: <strong>{this.state.authUri}</strong></p>
                 <p aria-live="polite">Token: <strong>{this.state.tokenUri}</strong></p>
-                <p aria-live="polite">Full Auth uri: <strong>{this.state.authenticateFullUri}</strong></p>                  
+                <p aria-live="polite">Full Auth uri: <strong>{this.state.authenticateFullUri}</strong></p>
+                
+                <div className="line-break">{                    
+                    this.state.authenticateFullUri && this.state.authenticateFullUri.split('?')[1].split('&').map(str => {
+                        let pair = str.split('=');
+                        return pair[0] + ' --> ' + decodeURIComponent(pair[1]) + '\n' ;
+                    })
+                }</div>
+                
+                <button className="btn btn-primary" onClick={this.grant}>Grant</button>
+                
             </div>
         );
     }

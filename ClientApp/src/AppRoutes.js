@@ -4,6 +4,7 @@ import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
 import { Launch } from './components/smartonfhir/Launch';
 import { Index } from './components/smartonfhir/Index';
+import { PatientForm } from './components/smartonfhir/PatientForm';
 
 const AppRoutes = [
   {
@@ -26,6 +27,10 @@ const AppRoutes = [
   {
       path: '/launch',
       element: <Launch />
+  },
+  {
+      path: '/patient',
+      element: <PatientForm />
   },
   ...ApiAuthorzationRoutes
 ];

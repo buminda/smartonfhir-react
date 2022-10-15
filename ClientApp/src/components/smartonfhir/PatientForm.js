@@ -1,42 +1,27 @@
 ﻿import React, { Component } from 'react';
 import authService from './../api-authorization/AuthorizeService';
-//import  { LForms } from 'lforms';
+//import  { LForms } from 'lforms';0
 import jwt_decode from "jwt-decode";
 import './Index.css';
+import { ItemString } from './ItemString';
+import { ItemDate } from './ItemDate';
+import { ItemDecimal } from './ItemDecimal';
+import { ItemInteger } from './ItemInteger';
 
 
 export class PatientForm extends Component {
 
     static launcData = {};
     static divId = "formContainer";
-    static formDef = {
-    "status": "draft",
-    "title": "Demo Form",
-    "resourceType": "Questionnaire",
-    "item": [
-            {
-                "type": "string",
-                "linkId": "X-002",
-                "text": "Eye color"
-            }
-        ]
-    }
     
+
+    static formDefData = [];
     constructor(props) {
         super(props);
-        /*this.launcData = JSON.parse(localStorage.getItem("launchData"));
-        const queryParams = new URLSearchParams(window.location.search);
         this.state = {
-            state: queryParams.get("state"), // session key
-            code: queryParams.get("code"), // authorization code
-            id_token: '',
-            patientdId: '',
-            patient: {},
-            practitioner: {}
+            formDef: this.props.value,
+            name : "Name-Test"
         }        
-        this.getAuthCode();      */
-
-        //LForms.Util.addFormToPage(this.formDef, 'formContainer');
     }
 
     async loadPatient(patientId) {
@@ -97,20 +82,43 @@ export class PatientForm extends Component {
 
     render() {
         return (
-            <div>      
-                <table>
-                    <tbody>
-                        <tr><td >State</td><td>{this.state.state}</td></tr>
-                        <tr><td>Code</td><td>{this.state.code}</td></tr>
-                        <tr><td>Access Token</td><td>{this.state.access_token}</td></tr>
-                        <tr><td>Id Token</td><td>{this.state.id_token}</td></tr>
-                        <tr><td>Practitioner</td><td>{this.state.practitionerId}</td></tr>
-                        <tr><td>Patient Id</td><td>{this.state.patientdId}</td></tr>
-                        <tr><td>Patient</td><td><pre>{JSON.stringify(this.state.patient, null, 2)}</pre> </td></tr>
-                        <tr><td>Practitioner</td><td> <pre>{JSON.stringify(this.state.practitioner, null, 2)}</pre> </td></tr>
-                        <tr><td><div id={this.divId} ></div></td></tr>
-                    </tbody>
-                </table>                
+            <div>                                
+
+                <div >
+                    <p>{this.state.name}</p>
+                    <p>{this.state.formDef.title}</p>
+                    {this.state.formDef.item.map((data, key) => {
+                        {
+                            switch (data.type) {
+                                case 'string':
+                                    return (
+                                        <ItemString key={data.linkId}  value={data}></ItemString>
+                                    );
+                                case 'date':
+                                    return (
+                                        <ItemDate key={data.linkId} value={data}></ItemDate>
+                                    );
+                                case 'decimal':
+                                    return (
+                                        <ItemDecimal key={data.linkId} value={data}></ItemDecimal>
+                                    );
+                                case 'integer':
+                                    return (
+                                        <ItemInteger key={data.linkId} value={data}></ItemInteger>
+                                    );
+                                case 'group':
+                                    return (
+                                        <PatientForm key={data.linkId} value={data}></PatientForm>
+                                    );
+                                default:
+                                    return null;
+                            }
+                        }
+                        
+                    })}
+                </div>
+
+
             </div>
         );
     }

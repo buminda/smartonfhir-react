@@ -4,7 +4,90 @@ import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
 import { Launch } from './components/smartonfhir/Launch';
 import { Index } from './components/smartonfhir/Index';
-import { PatientForm } from './components/smartonfhir/PatientForm';
+import {  PatientForm } from './components/smartonfhir/PatientForm';
+import { Form } from './components/smartonfhir/Form';
+
+const FormDef = {
+    status: "draft",
+    title: "Demo Form",
+    resourceType: "Questionnaire",
+    item: [
+        {
+            type: "string",
+            linkId: "X-001",
+            text: "First Name"
+        },
+        {
+            type: "string",
+            linkId: "X-002",
+            text: "Last Name"
+        },
+        {
+            type: "date",
+            linkId: "X-003",
+            text: "DOB"
+        },
+        {
+            type: "integer",
+            linkId: "X-004",
+            text: "Age"
+        },
+        {
+            type: "decimal",
+            linkId: "X-005",
+            text: "Height"
+        },
+        {
+            type: "group",
+            linkId: "X-006",
+            text: "Height",
+            item: [
+                {
+                    type: "string",
+                    linkId: "X-006-1",
+                    text: "First Name"
+                },
+                {
+                    type: "string",
+                    linkId: "X-006-2",
+                    text: "Last Name"
+                },
+                {
+                    type: "group",
+                    linkId: "X-006-3",
+                    text: "Last Name",
+                    item: [
+                        {
+                            type: "string",
+                            linkId: "X-006-3-1",
+                            text: "First Name"
+                        },
+                        {
+                            type: "string",
+                            linkId: "X-006-3-2",
+                            text: "Last Name"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            type: "date",
+            linkId: "X-007",
+            text: "DOB"
+        },
+        {
+            type: "integer",
+            linkId: "X-008",
+            text: "Age"
+        },
+        {
+            type: "decimal",
+            linkId: "X-009",
+            text: "Height"
+        }
+    ]
+};
 
 const AppRoutes = [
   {
@@ -30,7 +113,11 @@ const AppRoutes = [
   },
   {
       path: '/patient',
-      element: <PatientForm />
+      element: <PatientForm value={FormDef} />
+  },
+  {
+      path: '/form',
+      element: <Form value={FormDef} />
   },
   ...ApiAuthorzationRoutes
 ];

@@ -18,9 +18,11 @@ export class PatientForm extends Component {
     static formDefData = [];
     constructor(props) {
         super(props);
+        console.log(JSON.stringify(this.props.answersData))
         this.state = {
             formDef: this.props.value,
-            name : "Name-Test"
+            name: "Name-Test",
+            answersData: this.props.answersData
         }        
     }
 
@@ -92,23 +94,23 @@ export class PatientForm extends Component {
                             switch (data.type) {
                                 case 'string':
                                     return (
-                                        <ItemString key={data.linkId}  value={data}></ItemString>
+                                        <ItemString key={data.linkId} value={data} answersData={this.state.answersData}></ItemString>
                                     );
                                 case 'date':
                                     return (
-                                        <ItemDate key={data.linkId} value={data}></ItemDate>
+                                        <ItemDate key={data.linkId} value={data} answersData={this.state.answersData}></ItemDate>
                                     );
                                 case 'decimal':
                                     return (
-                                        <ItemDecimal key={data.linkId} value={data}></ItemDecimal>
+                                        <ItemDecimal key={data.linkId} value={data} answersData={this.state.answersData}></ItemDecimal>
                                     );
                                 case 'integer':
                                     return (
-                                        <ItemInteger key={data.linkId} value={data}></ItemInteger>
+                                        <ItemInteger key={data.linkId} value={data} answersData={this.state.answersData}></ItemInteger>
                                     );
                                 case 'group':
                                     return (
-                                        <PatientForm key={data.linkId} value={data}></PatientForm>
+                                        <PatientForm key={data.linkId} value={data} answersData={this.state.answersData}></PatientForm>
                                     );
                                 default:
                                     return null;

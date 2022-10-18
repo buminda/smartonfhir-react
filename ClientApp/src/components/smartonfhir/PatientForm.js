@@ -7,7 +7,7 @@ import { ItemString } from './ItemString';
 import { ItemDate } from './ItemDate';
 import { ItemDecimal } from './ItemDecimal';
 import { ItemInteger } from './ItemInteger';
-
+import { ItemChoice } from './ItemChoice';
 
 export class PatientForm extends Component {
 
@@ -107,6 +107,10 @@ export class PatientForm extends Component {
                                 case 'integer':
                                     return (
                                         <ItemInteger key={data.linkId} value={data} answersData={this.state.answersData}></ItemInteger>
+                                    );
+                                case 'choice':
+                                    return (
+                                        <ItemChoice key={data.linkId} value={data} answersData={this.state.answersData}></ItemChoice>
                                     );
                                 case 'group':
                                     return (

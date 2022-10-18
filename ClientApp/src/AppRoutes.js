@@ -85,6 +85,42 @@ const FormDef = {
             type: "decimal",
             linkId: "X-009",
             text: "Height"
+        },
+        {
+            type: "choice",
+            linkId: "X-010",
+            text: "Chioce",
+            answerOption: [
+                {
+                    valueCoding: {
+                        system: "http://hl7.org/fhir/administrative-gender",
+                        code: "female",
+                        display: "Female"
+                    },
+                    initialSelected: true
+                },
+                {
+                    valueCoding: {
+                        system: "http://hl7.org/fhir/administrative-gender",
+                        code: "male",
+                        display: "Male"
+                    }
+                },
+                {
+                    valueCoding: {
+                        system: "http://hl7.org/fhir/administrative-gender",
+                        code: "other",
+                        display: "Other"
+                    }
+                },
+                {
+                    valueCoding: {
+                        system: "http://hl7.org/fhir/administrative-gender",
+                        code: "unknown",
+                        display: "Unknown"
+                    }
+                }
+            ]
         }
     ]
 };

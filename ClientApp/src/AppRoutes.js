@@ -90,6 +90,7 @@ const FormDef = {
             type: "choice",
             linkId: "X-010",
             text: "Chioce",
+            repeats: false,
             answerOption: [
                 {
                     valueCoding: {
@@ -121,7 +122,22 @@ const FormDef = {
                     }
                 }
             ]
+        },
+        {
+            type: "choice",
+            linkId: "X-011",
+            text: "Ajax",
+            repeats: false,
+            answerValueSet:"https://sqlonfhir-r4.azurewebsites.net/fhir/ValueSet/cc-categories/_history/1?_format=json"
+        },
+        {
+            type: "choice",
+            linkId: "X-012",
+            text: "Ajax",
+            repeats: true,
+            answerValueSet:"https://sqlonfhir-r4.azurewebsites.net/fhir/ValueSet/cc-categories/_history/1?_format=json"
         }
+
     ]
 };
 

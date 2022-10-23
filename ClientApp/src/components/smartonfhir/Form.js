@@ -14,42 +14,61 @@ export class Form extends Component {
     static divId = "formContainer";   
     
     static formDefData = [];
-    static qAnswers = new Array();
-;
+    
 
     constructor(props) {
         super(props);
         const queryParams = new URLSearchParams(window.location.search);
+        const q = queryParams.get("questionnaire");
+        const qr = queryParams.get("questionnaireresponse");
+        let resourceType = "";
+        let formRef = "";
+        if (q) {
+            resourceType = "Questionnaire";
+            formRef = q;
+        }
+        if (qr) {
+            resourceType = "QuestionnaireResponse";
+            formRef = qr;
+        }
+        const qAnswers = new Array();
         //console.log(' FORM PARAMS ' + JSON.stringify(queryParams) + '  ' + queryParams.get("id"));
         this.state = {
-            formRef: queryParams.get("questionnaire"),
+            formRef: formRef,
             formDef: {},
             name: "Name-Test",
-            formData: {}
+            formData: {},
+            qAnswers: qAnswers,
+            resourceType : resourceType
         }        
+        //console.log(' STATE formRef  ' + formRef + '  resourceType ' + resourceType)
         this.handleChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.qAnswers["1"] = { test: "Test 1" };
-        this.qAnswers["2"] = { test: "Test 2" };
-        this.console.log(' qAnswers ------------- >' +JSON.stringify(this.qAnswers))
+        //console.log(' qAnswers ------------- >' +JSON.stringify(qAnswers))
         //this.loadQuestionnaire = this.loadQuestionnaire.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         //await this.loadQuestionnaire();
         const formRef = this.state.formRef;
-        fetch(`https://sqlonfhir-r4.azurewebsites.net/fhir/Questionnaire/${formRef}?_format=json`)
+        /*fetch(`https://sqlonfhir-r4.azurewebsites.net/fhir/Questionnaire/${formRef}?_format=json`)
             .then(resp => resp.json())
-            .then(data => this.setState({ formDef: data }));
+            .then(data => this.setState({ formDef: data }));*/
+        await this.loadQuestionnaire();
     }
 
     async loadQuestionnaire()
     {
         const formRef = this.state.formRef;
-        const response = await fetch(`https://sqlonfhir-r4.azurewebsites.net/fhir/Questionnaire/${formRef}?_format=json`, {
+        const resourceType = this.state.resourceType;
+        //console.log(' formRef  ' + formRef + '  resourceType ' + resourceType)
+        let response = await fetch(`https://sqlonfhir-r4.azurewebsites.net/fhir/${resourceType}/${formRef}?_format=json`, {
             headers: {}
         });
-        const data = await response.json();
+        let data = await response.json();
+        this.setState({ formDef: data, loading: false });
+        this.state.formDef = data;
+
         if (data.resourceType == 'Questionnaire') {
             this.setState({ formDef: data, loading: false });
             this.state.formDef = data;
@@ -69,7 +88,7 @@ export class Form extends Component {
 
     handleSubmit(event) {        
         event.preventDefault();        
-        console.log( '--------------> '+ JSON.stringify(this.state.formData));
+        console.log('--------------> ' + JSON.stringify(this.state.qAnswers));
         alert('A form was submitted: ');
     }  
 
@@ -77,13 +96,13 @@ export class Form extends Component {
 
     render() {
         //await this.loadQuestionnaire();
-        console.log('RENDER >>>>>>>>>>>>>>>>>>>>>>>>>' + JSON.stringify(this.state.formDef));
+        //console.log('RENDER >>>>>>>>>>>>>>>>>>>>>>>>>' + JSON.stringify(this.state.qAnswers));
         return (
             <div>
                 <form id="questionnaire" onSubmit={this.handleSubmit}>
                     {this.state.formDef &&
                         <div>
-                        <PatientForm value={this.state.formDef} answersData={this.state.formData}></PatientForm>
+                            <PatientForm value={this.state.formDef} qAnswers={this.state.qAnswers}></PatientForm>
                         <br />
                         <input type="submit" className="btn btn-primary" />
                         </div>

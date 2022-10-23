@@ -24,7 +24,7 @@ export class ItemChoice extends Component {
             headers:  {} 
         });
         const data = await response.json();
-        console.log('+++++++++++++++++++ '+ JSON.stringify(data.compose.include[0].concept));
+        //console.log('+++++++++++++++++++ '+ JSON.stringify(data.compose.include[0].concept));
         this.setState({ valueSet: data, loading: false });
         
     }
@@ -32,7 +32,7 @@ export class ItemChoice extends Component {
     render() {
         const valueSetExists = this.state.data.answerValueSet && this.state.valueSet;
         const valueSetArrray = this.state.data.answerOption;
-        console.log(this.state.data.linkId +'---------------------->' +this.state.data.repeats);
+        //console.log(this.state.data.linkId +'---------------------->' +this.state.data.repeats);
         return (
             
             <div className="row">

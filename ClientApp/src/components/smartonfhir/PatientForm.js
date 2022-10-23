@@ -14,11 +14,10 @@ export class PatientForm extends Component {
     static launcData = {};
     static divId = "formContainer";
     
-
     static formDefData = [];
     constructor(props) {
         super(props);
-        console.log(JSON.stringify(this.props.answersData))
+        //console.log(JSON.stringify(this.props.value))
         this.state = {
             formDef: this.props.value,
             name: "Name-Test",
@@ -26,105 +25,54 @@ export class PatientForm extends Component {
         }        
     }
 
-    async loadPatient(patientId) {
-        const response = await fetch(this.launcData.iss + '/Patient/' + patientId, {
-            headers: !this.state.access_token ? {} : { 'Authorization': `Bearer ${this.state.access_token}` }
-        });
-        const data = await response.json();
-
-        this.setState({ patient: data });        
-    }
-
-    async loadPractitioner(practitionerId) {
-        console.log('practitionerId ' + practitionerId)
-        const response = await fetch(this.launcData.iss+'/' + practitionerId, {
-            headers: !this.state.access_token ? {} : { 'Authorization': `Bearer ${this.state.access_token}` }
-        });
-        const data = await response.json();
-
-        this.setState({ practitioner: data });  
-    }
-
-    setStateSynchronous(stateUpdate) {
-        return new Promise(resolve => {
-        this.setState(stateUpdate, () => resolve());
-    });
-}
-
-    async getAuthCode() {
-        var data = {
-            code: this.state.code,
-            grant_type: 'authorization_code',
-            redirect_uri: this.launcData.redirectUri,
-        };
-
-        var formBody = [];
-        for (var property in data) {
-            var encodedKey = encodeURIComponent(property);
-            var encodedValue = encodeURIComponent(data[property]);
-            formBody.push(encodedKey + "=" + encodedValue);
-        }
-        formBody = formBody.join("&");
-
-        await fetch(this.launcData.tokenUri, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
-            body: formBody
-        }).then(response => response.json())
-            .then(data => {
-                var decodedJWT = jwt_decode(data.id_token);
-                this.setState({ access_token: data.access_token, id_token: data.id_token, practitionerId: decodedJWT.profile, patientdId: data.patient } );                
-                this.loadPatient(data.patient);
-                this.loadPractitioner(decodedJWT.profile);
-            });
-
+    static getDerivedStateFromProps(props, state) {
+        return { formDef: props.value };
     }
 
     render() {
+        //console.log(this.state.name + ' --- -' + JSON.stringify( this.state.formDef) + ' --- -' + this.state.formDef.item)
         return (
-            <div>                                
-
-                <div >
-                    <p>{this.state.name}</p>
-                    <p>{this.state.formDef.title}</p>
-                    {this.state.formDef.item.map((data, key) => {
-                        {
-                            switch (data.type) {
-                                case 'string':
-                                    return (
-                                        <ItemString key={data.linkId} value={data} answersData={this.state.answersData}></ItemString>
-                                    );
-                                case 'date':
-                                    return (
-                                        <ItemDate key={data.linkId} value={data} answersData={this.state.answersData}></ItemDate>
-                                    );
-                                case 'decimal':
-                                    return (
-                                        <ItemDecimal key={data.linkId} value={data} answersData={this.state.answersData}></ItemDecimal>
-                                    );
-                                case 'integer':
-                                    return (
-                                        <ItemInteger key={data.linkId} value={data} answersData={this.state.answersData}></ItemInteger>
-                                    );
-                                case 'choice':
-                                    return (
-                                        <ItemChoice key={data.linkId} value={data} answersData={this.state.answersData}></ItemChoice>
-                                    );
-                                case 'group':
-                                    return (
-                                        <PatientForm key={data.linkId} value={data} answersData={this.state.answersData}></PatientForm>
-                                    );
-                                default:
-                                    return null;
+            <div>
+                {this.state.name && this.state.formDef && this.state.formDef.item &&
+                    <div >
+                        <p>{this.state.name}</p>
+                        <p>{this.state.formDef.title}</p>
+                        {this.state.formDef.item.map((data, key) => {
+                            {
+                                switch (data.type) {
+                                    case 'string':
+                                        return (
+                                            <ItemString key={data.linkId} value={data} answersData={this.state.answersData}></ItemString>
+                                        );
+                                    case 'date':
+                                        return (
+                                            <ItemDate key={data.linkId} value={data} answersData={this.state.answersData}></ItemDate>
+                                        );
+                                    case 'decimal':
+                                        return (
+                                            <ItemDecimal key={data.linkId} value={data} answersData={this.state.answersData}></ItemDecimal>
+                                        );
+                                    case 'integer':
+                                        return (
+                                            <ItemInteger key={data.linkId} value={data} answersData={this.state.answersData}></ItemInteger>
+                                        );
+                                    case 'choice':
+                                        return (
+                                            <ItemChoice key={data.linkId} value={data} answersData={this.state.answersData}></ItemChoice>
+                                        );
+                                    case 'group':
+                                        return (
+                                            <PatientForm key={data.linkId} value={data} answersData={this.state.answersData}></PatientForm>
+                                        );
+                                    default:
+                                        return null;
+                                }
                             }
-                        }
-                        
-                    })}
-                </div>
 
+                        })}
+                    </div>
 
+                }
             </div>
         );
     }

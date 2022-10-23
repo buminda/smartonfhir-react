@@ -62,9 +62,9 @@ export class ItemChoice extends Component {
                     }
                     {this.state.data.repeats && this.state.valueSet && 
                         
-                            this.state.valueSet.compose.include[0].concept.map((dataItem, index) => {
-                                return (<input type="checkbox" id={`custom-checkbox-${index}`} /> )
-                            })
+                        this.state.valueSet.compose.include[0].concept.map((dataItem, index) => {
+                            return (<span className="span4"  key={index}> <input className="form-check-input" type="checkbox" id={`custom-checkbox-${index}`} /></span> )
+                        })
                         
                     }
                     {/*<input key={this.state.data.linkId} className="form-control" type="text"  onChange={this.setAnswerData}></input>*/}

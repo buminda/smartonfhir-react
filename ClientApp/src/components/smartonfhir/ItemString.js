@@ -20,7 +20,7 @@ export class ItemString extends Component {
                     <span> {this.state.data.linkId} {this.state.data.text} </span>
                 </div>
                 <div className="col-md-9">
-                    <input key={this.state.data.linkId} className="form-control" type="text"  onChange={this.setAnswerData}></input>
+                    <input key={this.state.data.linkId} className="form-control" type="text" onChange={this.setAnswerData} value={this.state.data.answer}></input>
                 </div>
             </div>                        
         );

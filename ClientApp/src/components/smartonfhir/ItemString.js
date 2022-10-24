@@ -1,11 +1,12 @@
 ﻿import React, { Component } from 'react';
 import authService from './../api-authorization/AuthorizeService';
+import { ItemBase } from './ItemBase';
 
-export class ItemString extends Component {
+export class ItemString extends ItemBase {
 
     constructor(props) {
         super(props);
-        //console.log( "ItemString  -------------"+ JSON.stringify(this.props.answersData));
+        //console.log( "ItemString  -------------"+ JSON.stringify(this.props));
         this.state = { answersData: this.props.answersData }
         this.setAnswerData = this.setAnswerData.bind(this);
     }
@@ -17,6 +18,7 @@ export class ItemString extends Component {
     }
 
     render() {
+        
         return (
             <div className="row">
                 <div className="col-md-3">

@@ -39,7 +39,8 @@ export class Form extends Component {
             name: "Name-Test",
             formData: {},
             qAnswers: qAnswers,
-            resourceType : resourceType
+            resourceType: resourceType,
+            qrFormDef: {}
         }        
         //console.log(' STATE formRef  ' + formRef + '  resourceType ' + resourceType)
         this.handleChange = this.handleInputChange.bind(this);
@@ -77,9 +78,12 @@ export class Form extends Component {
             response = await fetch(`${data.questionnaire}?_format=json`, {
                 headers: {}
             });
-            data = await response.json();
-            this.setState({ formDef: data, loading: false });
-        }    
+            const dataQR = await response.json();
+            this.setState({ formDef: dataQR, loading: false, qrFormDef: data }, () => {
+                console.log(JSON.stringify(this.state));
+            });
+        }
+        
     }
 
     handleInputChange(event) {
@@ -92,8 +96,6 @@ export class Form extends Component {
         alert('A form was submitted: ');
     }  
 
-
-
     render() {
         //await this.loadQuestionnaire();
         //console.log('RENDER >>>>>>>>>>>>>>>>>>>>>>>>>' + JSON.stringify(this.state.qAnswers));
@@ -102,7 +104,7 @@ export class Form extends Component {
                 <form id="questionnaire" onSubmit={this.handleSubmit}>
                     {this.state.formDef &&
                         <div>
-                            <PatientForm value={this.state.formDef} qAnswers={this.state.qAnswers}></PatientForm>
+                            <PatientForm value={this.state.formDef} qAnswers={this.state.qAnswers} qr={this.state.qrFormDef }></PatientForm>
                         <br />
                         <input type="submit" className="btn btn-primary" />
                         </div>

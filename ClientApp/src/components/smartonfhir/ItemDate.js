@@ -10,9 +10,11 @@ export class ItemDate extends Component {
     }
 
     setAnswerData(event) {        
-        this.state.answersData[this.state.data.linkId] = event.target.value;
+        //this.state.answersData[this.state.data.linkId] = event.target.value;
+        this.state.answersData.answer[0].valueDate = event.target.value;
+        this.setState({ answersData: this.state.answersData });
     }
-        
+ 
 
     render() {
         return (
@@ -21,7 +23,7 @@ export class ItemDate extends Component {
                     <span>{this.state.value.linkId} {this.state.value.text} </span>
                 </div>
                 <div className="col-md-9">
-                    <input key={this.state.value.linkId} className="form-control" type="date" onChange={this.setAnswerData}></input>
+                    <input key={this.state.answersData.linkId} className="form-control" type="date" onChange={this.setAnswerData} value = { this.state.answersData.answer[0].valueDate } ></input>
                 </div>
             </div>                        
         );

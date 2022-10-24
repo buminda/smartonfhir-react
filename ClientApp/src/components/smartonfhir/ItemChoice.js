@@ -24,7 +24,7 @@ export class ItemChoice extends Component {
             headers:  {} 
         });
         const data = await response.json();
-        console.log('+++++++++++++++++++ '+ JSON.stringify(data.compose.include[0].concept));
+        //console.log('+++++++++++++++++++ '+ JSON.stringify(data.compose.include[0].concept));
         this.setState({ valueSet: data, loading: false });
         
     }
@@ -32,7 +32,7 @@ export class ItemChoice extends Component {
     render() {
         const valueSetExists = this.state.data.answerValueSet && this.state.valueSet;
         const valueSetArrray = this.state.data.answerOption;
-        console.log(this.state.data.linkId +'---------------------->' +this.state.data.repeats);
+        //console.log(this.state.data.linkId +'---------------------->' +this.state.data.repeats);
         return (
             
             <div className="row">
@@ -62,9 +62,9 @@ export class ItemChoice extends Component {
                     }
                     {this.state.data.repeats && this.state.valueSet && 
                         
-                            this.state.valueSet.compose.include[0].concept.map((dataItem, index) => {
-                                return (<input type="checkbox" id={`custom-checkbox-${index}`} /> )
-                            })
+                        this.state.valueSet.compose.include[0].concept.map((dataItem, index) => {
+                            return (<span className="span4"  key={index}> <input className="form-check-input" type="checkbox" id={`custom-checkbox-${index}`} /></span> )
+                        })
                         
                     }
                     {/*<input key={this.state.data.linkId} className="form-control" type="text"  onChange={this.setAnswerData}></input>*/}

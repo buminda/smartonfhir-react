@@ -20,7 +20,7 @@ export class ItemDate extends Component {
         return (
             <div className="row">
                 <div className="col-md-3">
-                    <span>{this.state.value.linkId} {this.state.value.text} </span>
+                    <span>{this.state.answersData.linkId} {this.state.answersData.text} </span>
                 </div>
                 <div className="col-md-9">
                     <input key={this.state.answersData.linkId} className="form-control" type="date" onChange={this.setAnswerData} value = { this.state.answersData.answer[0].valueDate } ></input>

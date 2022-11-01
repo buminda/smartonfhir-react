@@ -9,7 +9,7 @@ import { PatientForm } from './PatientForm';
 
 
 export class Form extends Component {
-
+    
     static launcData = {};
     static divId = "formContainer";   
     
@@ -28,6 +28,7 @@ export class Form extends Component {
             formRef = q;
         }
         if (qr) {
+            console.log(' FORM PARAMS ' + JSON.stringify(qr) + '  ' + queryParams.get("id"));
             resourceType = "QuestionnaireResponse";
             formRef = qr;
         }
@@ -62,25 +63,32 @@ export class Form extends Component {
     {
         const formRef = this.state.formRef;
         const resourceType = this.state.resourceType;
-        //console.log(' formRef  ' + formRef + '  resourceType ' + resourceType)
+        //console.log(' formRef  1' + formRef + '  resourceType ' + resourceType)
         let response = await fetch(`https://sqlonfhir-r4.azurewebsites.net/fhir/${resourceType}/${formRef}?_format=json`, {
             headers: {}
         });
         let data = await response.json();
-        this.setState({ formDef: data, loading: false });
-        this.state.formDef = data;
+        /*console.log(' ==================== ' + JSON.stringify(data));
+        this.setState({ formDef: data, loading: false },() => {
+            console.log(' Q ' + JSON.stringify(this.state.qrFormDef));
+        });
+        this.state.formDef = data;*/
 
         if (data.resourceType == 'Questionnaire') {
-            this.setState({ formDef: data, loading: false });
-            this.state.formDef = data;
+            this.setState({ formDef: data, loading: false }, () => {
+                //console.log(' Q ' + JSON.stringify(this.state.qrFormDef));
+            });
+            //this.state.formDef = data;
         }
         else {
-            response = await fetch(`${data.questionnaire}?_format=json`, {
+            //console.log(' formRef  2 ' + formRef + '  resourceType ' + data.resourceType + '  ' + data.questionnaire)
+            response = await fetch(`https://sqlonfhir-r4.azurewebsites.net/fhir/${data.questionnaire}?_format=json`, {
                 headers: {}
             });
             const dataQR = await response.json();
             this.setState({ formDef: dataQR, loading: false, qrFormDef: data }, () => {
-                console.log(JSON.stringify(this.state));
+                //console.log(' QR ' + JSON.stringify(this.state.qrFormDef));
+                //console.log(' Q ' + JSON.stringify(this.state.formDef));
             });
         }
         
@@ -98,13 +106,13 @@ export class Form extends Component {
 
     render() {
         //await this.loadQuestionnaire();
-        //console.log('RENDER >>>>>>>>>>>>>>>>>>>>>>>>>' + JSON.stringify(this.state.qAnswers));
+        //console.log('RENDER >>>>>>>>>>>>>>>>>>>>>>>>>' + JSON.stringify(this.state.formDef.item));
         return (
             <div>
                 <form id="questionnaire" onSubmit={this.handleSubmit}>
                     {this.state.formDef &&
                         <div>
-                            <PatientForm value={this.state.formDef} qAnswers={this.state.qAnswers} qr={this.state.qrFormDef }></PatientForm>
+                            <PatientForm key="ddfsdf" value={this.state.formDef} qAnswers={this.state.qAnswers} qr={this.state.qrFormDef} itemArray={this.state.formDef.item}></PatientForm>
                         <br />
                         <input type="submit" className="btn btn-primary" />
                         </div>

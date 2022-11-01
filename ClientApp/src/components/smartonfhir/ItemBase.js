@@ -15,23 +15,45 @@ export class ItemBase extends Component {
 
 
     getAnswerForQuestion(linkId, item) {
-        //console.log(JSON.stringify(item));
+        //if(linkId == "X-011")
+            //console.log(linkId + '    ]]]]]]]]]]]]]]]]]]]]]]]]]]]]   ' +JSON.stringify(item));
         if (!linkId || !item || item.length == 0) return null;
 
         for (let i = 0; i < item.length; i++) {            
-            console.log(i + '    '+ JSON.stringify(item[i]));
+            console.log(linkId + ' <><><><><><><><><<><><<><><><><><><  ' + i + '    ' + JSON.stringify(item[i]));
             if (item[i].item ) {
                 //return item[i].answer;
                 return this.getAnswerForQuestion(linkId, item[i].item);    
             } else {
+                
+                console.log(linkId + ' - ' + item[i].linkId + ' <><><><><><><><><<><><<><><><><><><  ' + i + '    ' + JSON.stringify(item[i]));
                 if (item[i].linkId === linkId && item[i].answer) {
-                    //console.log("MATCHING -------------------------<" +JSON.stringify(item[i]));
+                    console.log("MATCHING -------------------------<" + JSON.stringify(item[i]));
+                    
                     return item[i];
                 }
                     
             }
         } 
     }
+
+    /*getAnswerForQuestion(linkId, item) {
+        //if(linkId == "X-011")
+        //console.log(linkId + '    ]]]]]]]]]]]]]]]]]]]]]]]]]]]]   ' +JSON.stringify(item));
+        if (!linkId || !item || item.length == 0) return null;
+
+        for (let i = 0; i < item.length; i++) {
+
+            
+            if (item[i].linkId === linkId && item[i].answer) {
+                //if (item[i].linkId === "X-011") console.log("MATCHING -------------------------<" + JSON.stringify(item[i]));
+                console.log(linkId + '   ' + i + '    ' + JSON.stringify(item[i]));
+                return item[i];
+            }
+            
+        }
+        return null;
+    }*/
 
     
 

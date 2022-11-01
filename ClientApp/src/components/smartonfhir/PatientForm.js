@@ -40,7 +40,8 @@ export class PatientForm extends ItemBase {
                 {this.state.itemArray &&
                     <div >                        
                         {this.state.itemArray.map((data, key) => {
-                            {           
+                            {
+                                console.log(' pass param  ' + key + '  ------------ ' + JSON.stringify(data) + ' -??????????????????????????????-' + JSON.stringify(this.state.qrFormDef.item))
                                 let answer = super.getAnswerForQuestion(data.linkId, this.state.qrFormDef.item);
                                 
                                 switch (data.type) {                                    
@@ -72,7 +73,7 @@ export class PatientForm extends ItemBase {
                                     case 'group':
                                         const qAnswers = new Array();
                                         this.state.qAnswers.push({ linkId: data.linkId, item: qAnswers });
-                                        //console.log(' data.item ' + JSON.stringify(data.item))
+                                        
                                         return (
                                             <PatientForm key={data.linkId} value={this.state.formDef}  qAnswers={qAnswers} qr={this.state.qrFormDef} itemArray={data.item}></PatientForm>
                                         );

@@ -23,11 +23,12 @@ export class ItemBase extends Component {
                 }
             } else {
                 
-                f (item[i].linkId === linkId && item[i].answer) {                   
+                if (item[i].linkId === linkId && item[i].answer) {                   
                     return item[i];
                 }                    
             }
-        } 
+        }
+        return null;
     }
 
 }

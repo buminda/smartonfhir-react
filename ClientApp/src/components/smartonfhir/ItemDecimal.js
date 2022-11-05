@@ -19,7 +19,7 @@ export class ItemDecimal extends Component {
 
     render() {
         return (
-            <div className="row">
+            <div className="row q-item-div">
                 <div className="col-md-3">
                     <span> {this.state.answersData.linkId} {this.state.answersData.text} </span>    
                 </div>

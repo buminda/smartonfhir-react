@@ -38,3 +38,8 @@ td {
 .line-break {
     white-space: pre-line;
 }
+
+.q-item-div {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

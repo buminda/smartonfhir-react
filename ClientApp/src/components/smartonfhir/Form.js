@@ -99,8 +99,34 @@ export class Form extends Component {
     }
 
     handleSubmit(event) {        
-        event.preventDefault();        
-        console.log('--------------> ' + JSON.stringify(this.state.qAnswers));
+        event.preventDefault();  
+        var jsonQR = {
+            resourceType: "QuestionnaireResponse",
+            meta: {
+                versionId: "1",
+                lastUpdated: "2022-11-05T02:18:57.7392372+00:00"
+            },
+            text: {
+                status: "generated",
+                div: "<div xmlns=\"http://www.w3.org/1999/xhtml\" />"
+            },
+            questionnaire: "Questionnaire/20e339c65b1e4a7cb692d67162d9b0e2",
+            _questionnaire: {
+                extension: [
+                    {
+                        "url": "http://hl7.org/fhir/StructureDefinition/display",
+                        "valueString": "Demo Form"
+                    }
+                ]
+            },
+            status: "completed",
+            authored: "2022-10-23T01:44:03.682Z",
+            item: []
+        };
+
+        jsonQR.item = this.state.qAnswers;
+
+        console.log('--------------> ' + JSON.stringify(jsonQR));
         alert('A form was submitted: ');
     }  
 

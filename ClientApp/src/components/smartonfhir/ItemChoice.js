@@ -95,7 +95,7 @@ export class ItemChoice extends ItemBase {
                     }
                     {valueSetExists && !this.state.data.repeats && dropDownExtension &&
 
-                        <select className="form-control" onChange={this.handleChange} defaultValue={this.state?.answersData?.answer?.[0]?.valueCoding?.code} >
+                        <select className="form-control" onChange={this.setAnswerData} defaultValue={this.state?.answersData?.answer?.[0]?.valueCoding?.code} >
                             {
                                 this.state.valueSet.compose.include[0].concept.map((dataItem, index) => {
                                     return (<option key={dataItem.code} name={this.state.data.linkId} value={dataItem.code}>{dataItem.code}</option>)

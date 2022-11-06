@@ -8,14 +8,38 @@ export class ItemChoice extends ItemBase {
     constructor(props) {
         super(props);
         this.state = { data: this.props.value, value: 'XX', answersData: this.props.answersData }
-        //console.log(this.props.value.linkId + '  ************************ ' + JSON.stringify(this.props.value));
         this.setAnswerData = this.setAnswerData.bind(this);
-        //this.populateDropDown = this.populateDropDown.bind(this);       
-        
     }
 
     setAnswerData(event) {
-        this.state.answersData[this.state.data.linkId] = event.target.value ;
+        var value = event.target.value;
+        if (value) {
+            var ansData = {
+                valueCoding: {
+                    system: this.state?.valueSet?.compose?.include[0]?.system,
+                    code: value
+                }
+            };
+            if (this.state.data.repeats) {
+                this.addOrDeleteAnsweresForCheckbox(event.target.checked, ansData);
+            } else {
+                this.state.answersData.answer[0] = ansData;
+            }
+            
+            this.setState({ answersData: this.state.answersData });
+        }
+        else {
+            this.state.answersData.answer[0] = {};
+        }        
+    }
+
+    addOrDeleteAnsweresForCheckbox(addOrDelete, ansData) {
+        if (addOrDelete) {
+            this.state.answersData.answer.push(ansData);
+        } else {
+            this.state?.answersData?.answer?.splice(this.state?.answersData?.answer?.findIndex(item => item?.valueCoding?.code === ansData?.valueCoding?.code), 1)
+        }
+
     }
 
     handleChange() {
@@ -34,6 +58,15 @@ export class ItemChoice extends ItemBase {
         //console.log('+++++++++++++++++++ '+ JSON.stringify(data.compose.include[0].concept));
         this.setState({ valueSet: data, loading: false });
         
+    }
+
+    getValueSetDataItem(code) {
+        this.state?.valueSet?.compose?.include[0].concept?.map((dataItem, index) => {
+            if (dataItem.code == code) {
+                return dataItem;
+            }           
+        }) 
+        return null;
     }
 
     render() {
@@ -75,7 +108,7 @@ export class ItemChoice extends ItemBase {
                         this.state?.valueSet?.compose?.include?.[0]?.concept?.map((dataItem, index) => {                            
                             var tobeChecked = this.state?.answersData?.answer?.[0]?.valueCoding?.code === dataItem?.code;
                             return (<label htmlFor={dataItem.code} key={dataItem.code}>
-                                <input id={dataItem.code} type="radio" key={dataItem.code} name={this.state.data.linkId} value={dataItem.code} checked={tobeChecked} onChange={this.handleChange} />
+                                <input id={dataItem.code} type="radio" key={dataItem.code} name={this.state.data.linkId} value={dataItem.code} checked={tobeChecked} onChange={this.setAnswerData} />
                                         <span htmlFor={dataItem.code}>&nbsp;{dataItem.code}&nbsp;</span></label> )
                                 
                         })
@@ -84,17 +117,23 @@ export class ItemChoice extends ItemBase {
                     {!this.state?.data?.repeats && !dropDownExtension &&
                         this.state?.data?.answerOption?.map((dataItem, index) => {
                             var tobeChecked = this.state?.answersData?.answer?.[0]?.valueCoding?.code === dataItem?.valueCoding?.code;
-                            return (<label htmlFor={dataItem?.valueCoding?.code} key={dataItem?.valueCoding?.code}>
-                                <input id={dataItem?.valueCoding?.code} type="radio" key={dataItem?.valueCoding?.code} name={this.state.data.linkId} value={dataItem.code} checked={tobeChecked} onChange={this.handleChange} />
+                            return (<label htmlFor={dataItem?.valueCoding?.code} key={dataItem?.valueCoding?.code} >
+                                <input id={dataItem?.valueCoding?.code} type="radio" key={dataItem?.valueCoding?.code} value={dataItem?.valueCoding?.code} name={this.state.data.linkId} checked={tobeChecked} onChange={this.setAnswerData} />
                                 <span htmlFor={dataItem.code}>&nbsp;{dataItem?.valueCoding?.code}&nbsp;</span></label>)
 
                         })
                     }
 
                     {this.state.data.repeats && this.state.valueSet && 
-                        this.state?.valueSet?.compose?.include[0].concept?.map((dataItem, index) => {
-                            var tobeChecked = this.state.answersData?.answer?.[0]?.valueCoding?.code === dataItem?.code;
-                            return (<span className="span4" key={index}> <input className="form-check-input" type="checkbox" id={`custom-checkbox-${index}`} defaultChecked={tobeChecked} onChange={this.handleChange} />{dataItem.code}</span>)
+                        this.state?.valueSet?.compose?.include[0]?.concept?.map((dataItem, index) => {
+                            var tobeChecked = false;
+                            this.state.answersData?.answer?.map((ansItem, index) => {
+                                if (dataItem?.code == ansItem?.valueCoding?.code) {
+                                    tobeChecked = true;
+                                    return;
+                                }                                    
+                            });
+                            return (<span className="span4" key={index}> <input className="form-check-input" type="checkbox" id={`custom-checkbox-${index}`} defaultChecked={tobeChecked} onChange={this.setAnswerData} value={dataItem?.code || '' } />{dataItem.code}</span>)
                         })                        
                     }
                     {/*<input key={this.state.data.linkId} className="form-control" type="text"  onChange={this.setAnswerData}></input>*/}

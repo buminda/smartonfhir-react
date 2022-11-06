@@ -13,7 +13,17 @@ export class ItemInteger extends Component {
     
 
     setAnswerData(event) {
-        this.state.answersData.answer[0].valueInteger = event.target.value;
+        var value = event?.target?.value;
+        if (value) {            
+            if (!this.state.answersData?.answer?.[0]) {
+                this.state.answersData.answer[0] = {};
+            }
+            this.state.answersData.answer[0].valueInteger = event.target.value;    
+        }            
+        else {
+            this.state.answersData.answer[0] = {};
+        }
+        
         this.setState({ answersData: this.state.answersData });
     }
 
@@ -22,10 +32,10 @@ export class ItemInteger extends Component {
         return (
             <div className="row q-item-div">
                 <div className="col-md-3">
-                    <span> {this.state.answersData.linkId} {this.state.answersData.text} </span>
+                    <span> {this.state?.answersData?.linkId} {this.state?.answersData?.text} </span>
                 </div>
                 <div className="col-md-9">
-                    <input key={this.state.answersData.linkId} type="number" className="form-control" step="1" onChange={this.setAnswerData} value={this.state?.answersData?.answer?.[0]?.valueInteger}></input>
+                    <input key={this.state?.answersData?.linkId} type="number" className="form-control" step="1" onChange={this.setAnswerData} value={this.state?.answersData?.answer?.[0]?.valueInteger || ''}></input>
                 </div>
             </div>                        
         );

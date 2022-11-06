@@ -11,6 +11,16 @@ export class ItemDate extends Component {
 
     setAnswerData(event) {        
         //this.state.answersData[this.state.data.linkId] = event.target.value;
+        var value = event.target.value;
+        if (value) {            
+            if (!this.state.answersData?.answer?.[0]) {
+                this.state.answersData.answer[0] = {};
+            }
+            this.state.answersData.answer[0].valueDate = event.target.value;    
+        }            
+        else {
+            this.state.answersData.answer[0] = {};
+        }
         this.state.answersData.answer[0].valueDate = event.target.value;
         this.setState({ answersData: this.state.answersData });
     }

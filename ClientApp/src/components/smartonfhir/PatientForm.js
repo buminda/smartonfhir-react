@@ -50,7 +50,7 @@ export class PatientForm extends ItemBase {
                                             switch (data.type) {                                    
                                             case 'string':
                                             if (!answer)
-                                            answer = {linkId: data.linkId, answer: [{valueString: "" }], text: data.text };
+                                            answer = {linkId: data.linkId, answer: [], text: data.text };
                                             this.state.qAnswers.push(answer);
                                             return ( <ItemString key={data.linkId} answersData={answer}></ItemString>);
                                             case 'date':
@@ -65,7 +65,7 @@ export class PatientForm extends ItemBase {
                                             return (<ItemDecimal key={data.linkId} value={data} answersData={answer}></ItemDecimal>);
                                             case 'integer':
                                             if (!answer)
-                                            answer = {linkId: data.linkId, answer: [{valueInteger: "" }], text: data.text };
+                                            answer = {linkId: data.linkId, answer: [], text: data.text };
                                             this.state.qAnswers.push(answer);
                                             return ( <ItemInteger key={data.linkId} value={data} answersData={answer}></ItemInteger> );
                                             case 'choice':

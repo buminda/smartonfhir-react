@@ -6,8 +6,12 @@
   "devDependencies": {
     "gh-pages": "^4.0.0"
   },
-  "scrips": {
+  "scripts": {
+    "start": "react-scripts start",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  }
+    "deploy": "gh-pages -d build",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "homepage": "https://buminda.github.io/smartonfhir-react/"
 }

@@ -2,5 +2,12 @@
   "dependencies": {
     "lforms": "^29.3.1",
     "react-helmet": "^6.1.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
+  },
+  "scrips": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }

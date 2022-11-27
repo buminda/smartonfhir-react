@@ -8,6 +8,8 @@ import { ItemChoice } from './ItemChoice';
 import { ItemBase } from './ItemBase';
 
 export class PatientForm extends ItemBase {
+    //https://sqlonfhir-r4.azurewebsites.net/fhir/Questionnaire/20e339c65b1e4a7cb692d67162d9b0e2
+    //https://localhost:44438/form?questionnaireresponse=c4d498a93db446dda5bc15ea0a7db40b
 
     static launcData = {};
     static divId = "formContainer";
@@ -21,7 +23,8 @@ export class PatientForm extends ItemBase {
             answersData: this.props.answersData,
             qAnswers: this.props.qAnswers,
             qrFormDef: this.props.qr,
-            itemArray: this.props.itemArray
+            itemArray: this.props.itemArray,
+            elmRefArray:[]
         }
     }
 
@@ -43,7 +46,7 @@ export class PatientForm extends ItemBase {
                                         if (!answer)
                                             answer = { linkId: data.linkId, answer: [], text: data.text };
                                         this.state.qAnswers.push(answer);
-                                        return (<ItemString key={data.linkId} answersData={answer}></ItemString>);
+                                        return (<ItemString key={data.linkId} answersData={answer} elmRefArray={this.state.elmRefArray}></ItemString>);
                                     case 'date':
                                         if (!answer)
                                             answer = { linkId: data.linkId, answer: [{ valueDate: "" }], text: data.text };

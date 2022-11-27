@@ -10,6 +10,10 @@ export class ItemString extends ItemBase {
 
         this.state = { answersData: this.props.answersData }
         this.setAnswerData = this.setAnswerData.bind(this);
+        this.textInput = React.createRef();
+        this.label = React.createRef();
+        this.props.elmRefArray.push({ id: this.setAnswerData.linkId, elements: [this.textInput, this.label] });
+        console.log('Element reference list ' + this.props.answersData.linkId +'  -- ' + JSON.stringify(this.props.elmRefArray));
     }
 
     setAnswerData(event) {     
@@ -24,8 +28,9 @@ export class ItemString extends ItemBase {
         else {
             this.state.answersData.answer[0] = {};
         }
-        //console.log(JSON.stringify(this.state.answersData));
+        console.log(' CURRENT VALUE ' + JSON.stringify(this.textInput.current.value));
         this.setState({ answersData: this.state.answersData })
+
     }
 
     render() {
@@ -33,10 +38,10 @@ export class ItemString extends ItemBase {
         return (
             <div className="row q-item-div">
                 <div className="col-md-3">
-                    <span> {this.state?.answersData?.linkId} {this.state?.answersData?.text} </span>
+                    <span ref={ this.label}> {this.state?.answersData?.linkId} {this.state?.answersData?.text} </span>
                 </div>
                 <div className="col-md-9">
-                    <input key={this.state?.answersData?.linkId} className="form-control" type="text" onChange={this.setAnswerData} value={this.state?.answersData?.answer?.[0]?.valueString || ''}></input>
+                    <input ref={this.textInput} key={this.state?.answersData?.linkId} className="form-control" type="text" onChange={this.setAnswerData} value={this.state?.answersData?.answer?.[0]?.valueString || ''}></input>
                 </div>
             </div>                        
         );

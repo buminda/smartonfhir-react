@@ -13,7 +13,7 @@ export class PatientForm extends ItemBase {
 
     static launcData = {};
     static divId = "formContainer";
-
+    
     static formDefData = [];
     constructor(props) {
         super(props);
@@ -24,7 +24,7 @@ export class PatientForm extends ItemBase {
             qAnswers: this.props.qAnswers,
             qrFormDef: this.props.qr,
             itemArray: this.props.itemArray,
-            elmRefArray:[]
+            elmRefArray: [], item: this.props.item
         }
     }
 
@@ -46,33 +46,34 @@ export class PatientForm extends ItemBase {
                                         if (!answer)
                                             answer = { linkId: data.linkId, answer: [], text: data.text };
                                         this.state.qAnswers.push(answer);
-                                        return (<ItemString key={data.linkId} answersData={answer} elmRefArray={this.state.elmRefArray}></ItemString>);
+                                        //this.elmRefArray.push({ id: data.linkId });
+                                        return (<ItemString key={data.linkId} answersData={answer} elmRefArray={this.state.elmRefArray} item={ data}></ItemString>);
                                     case 'date':
                                         if (!answer)
                                             answer = { linkId: data.linkId, answer: [{ valueDate: "" }], text: data.text };
                                         this.state.qAnswers.push(answer);
-                                        return (<ItemDate key={data.linkId} value={data} answersData={answer}></ItemDate>);
+                                        return (<ItemDate key={data.linkId} value={data} answersData={answer} elmRefArray={this.state.elmRefArray} item={data}></ItemDate>);
                                     case 'decimal':
                                         if (!answer)
                                             answer = { linkId: data.linkId, answer: [{ valueDecimal: "" }], text: data.text };
                                         this.state.qAnswers.push(answer);
-                                        return (<ItemDecimal key={data.linkId} value={data} answersData={answer}></ItemDecimal>);
+                                        return (<ItemDecimal key={data.linkId} value={data} answersData={answer} elmRefArray={this.state.elmRefArray} item={data}></ItemDecimal>);
                                     case 'integer':
                                         if (!answer)
                                             answer = { linkId: data.linkId, answer: [], text: data.text };
                                         this.state.qAnswers.push(answer);
-                                        return (<ItemInteger key={data.linkId} value={data} answersData={answer}></ItemInteger>);
+                                        return (<ItemInteger key={data.linkId} value={data} answersData={answer} elmRefArray={this.state.elmRefArray} item={data}></ItemInteger>);
                                     case 'choice':
                                         if (!answer)
                                             answer = { linkId: data.linkId, answer: [{ valueInteger: "" }], text: data.text };
                                         this.state.qAnswers.push(answer);
-                                        return (<ItemChoice key={data.linkId} value={data} answersData={answer}></ItemChoice>);
+                                        return (<ItemChoice key={data.linkId} value={data} answersData={answer} elmRefArray={this.state.elmRefArray} item={data}></ItemChoice>);
                                     case 'group':
                                         const qAnswers = new Array();
                                         this.state.qAnswers.push({ linkId: data.linkId, item: qAnswers });
 
                                         return (
-                                            <PatientForm key={data.linkId} value={this.state.formDef} qAnswers={qAnswers} qr={this.state.qrFormDef} itemArray={data.item}></PatientForm>
+                                            <PatientForm key={data.linkId} value={this.state.formDef} qAnswers={qAnswers} qr={this.state.qrFormDef} itemArray={data.item} elmRefArray={this.state.elmRefArray} item={data}></PatientForm>
                                         );
                                     default:
                                         return null;

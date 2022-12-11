@@ -7,8 +7,19 @@ export class ItemChoice extends ItemBase {
 
     constructor(props) {
         super(props);
-        this.state = { data: this.props.value, value: 'XX', answersData: this.props.answersData }
+        this.state = { data: this.props.value, value: 'XX', answersData: this.props.answersData, visible: true, item: this.props.item }
         this.setAnswerData = this.setAnswerData.bind(this);
+        this.callEnableWhen = this.callEnableWhen.bind(this);
+        this.props.elmRefArray.push({ id: this.setAnswerData.linkId, answersData: this.props.answersData , f: this.callEnableWhen });
+    }
+
+    callEnableWhen(values) {
+        if (this.state?.item?.enableWhen) {
+            //console.log('Calling enable when - Item Chiouce ' + this.state?.data?.linkId + '  ' + JSON.stringify(values));
+            //console.log('All answers ' + JSON.stringify(this.props.elmRefArray));
+            var enalbleResult = this.evaluateEnableWhen(this.state?.item?.enableWhen, this.props.elmRefArray)
+            this.setState({ visible: enalbleResult });
+        }            
     }
 
     setAnswerData(event) {
@@ -30,7 +41,12 @@ export class ItemChoice extends ItemBase {
         }
         else {
             this.state.answersData.answer[0] = {};
-        }        
+        }   
+        for (var i = 0; i < this.props.elmRefArray.length; i++) {
+            //console.log('passing ' + JSON.stringify(this.state.answersData));
+            this.props.elmRefArray[i].f(this.state.answersData);
+        }
+        //this.getEnableWhenForQuestion(this.state?.data?.linkId)
     }
 
     addOrDeleteAnsweresForCheckbox(addOrDelete, ansData) {
@@ -78,7 +94,10 @@ export class ItemChoice extends ItemBase {
             this.state.data.extension[0].valueCodeableConcept.coding[0].code === 'drop-down';
         //console.log(this.state.data.linkId + '---------------------->' + JSON.stringify(this.state.data.extension) + '   ' + valueSetArrray + '   '  + dropDownExtension);
         return (
-            
+        <div>
+            {
+                this.state.visible &&
+
             <div className="row q-item-div">
                 <div className="col-md-3">
                     <span> {this.state?.data?.linkId} {this.state?.data?.text} </span>
@@ -138,7 +157,9 @@ export class ItemChoice extends ItemBase {
                     }
                     {/*<input key={this.state.data.linkId} className="form-control" type="text"  onChange={this.setAnswerData}></input>*/}
                 </div>
-            </div>                        
+                    </div> 
+            }
+            </div>
         );
     }
 }

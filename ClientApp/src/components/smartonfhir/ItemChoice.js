@@ -17,7 +17,7 @@ export class ItemChoice extends ItemBase {
         if (this.state?.item?.enableWhen) {
             //console.log('Calling enable when - Item Chiouce ' + this.state?.data?.linkId + '  ' + JSON.stringify(values));
             //console.log('All answers ' + JSON.stringify(this.props.elmRefArray));
-            var enalbleResult = this.evaluateEnableWhen(this.state?.item?.enableWhen, this.props.elmRefArray)
+            var enalbleResult = this.evaluateEnableWhen(this.state?.item, this.props.elmRefArray)
             this.setState({ visible: enalbleResult });
         }            
     }

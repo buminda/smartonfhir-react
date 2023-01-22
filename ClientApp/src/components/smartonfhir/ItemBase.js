@@ -15,14 +15,16 @@ export class ItemBase extends Component {
         console.log('Calling enable when base ' + this.state?.answersData?.linkId + '  ' + JSON.stringify(values));
     }
 
-    evaluateEnableWhen(enableWhenArray, anwesrs) {
+    evaluateEnableWhen(item, anwesrs) {
         //console.log('Calling enable conditions ' + JSON.stringify(anwesrs))
+        var enableWhenArray = item?.enableWhen;
         var enabled = true;
         for (let i = 0; i < enableWhenArray.length; i++) {
             var enalbeCondition = enableWhenArray[i];
             var qLinkId = enalbeCondition.question;
             var operator = enalbeCondition.operator;
             var answer = enalbeCondition.answerString;
+            var behavior = enalbeCondition.answerString;
 
             var userAnswer = null;
             for (let j = 0; j < anwesrs.length; j++) {
@@ -33,23 +35,41 @@ export class ItemBase extends Component {
                     break;
                 }
             }
-            if (userAnswer) {
-                var foundMatch = false; 
+
+            var foundMatch = false; 
+            if (userAnswer)
+            {
+                
                 for (let j = 0; j < userAnswer.answer.length; j++) {
-                    if (operator === '=') {
+                    if (operator === '=')
+                    {
                         //console.log('User answer, op =  ' + anwesrs[j]?.answer?.valueCoding?.code + '  ' + answer);
-                        if (userAnswer.answer[j].valueCoding?.code === answer) {
+                        if (userAnswer.answer[j].valueCoding?.code === answer)
+                        {
                             //console.log('User answer, op =  found' + userAnswer.answer[j].valueCoding?.code + '  ' + answer);
                             foundMatch = true;
                             break;
                         }
-                    } else if (operator === '!=') {
-
+                    } else if (operator === '!=')
+                    {
+                        if (userAnswer.answer[j].valueCoding?.code !== answer) {
+                            //console.log('User answer, op =  found' + userAnswer.answer[j].valueCoding?.code + '  ' + answer);
+                            foundMatch = true;
+                            break;
+                        }
+                    }                    
+                }                
+            }
+            if (!foundMatch)
+                enabled = false; //all or any we need to find a match.
+            else {
+                if (behavior) {
+                    if (behavior === 'any') {
+                        break; // we find a match and behavior is any
                     }
-                    
+                } else {
+                    break; // no behavor defined => its any ??
                 }
-                if (!foundMatch)
-                    enabled = false;
             }
         }
         return enabled;

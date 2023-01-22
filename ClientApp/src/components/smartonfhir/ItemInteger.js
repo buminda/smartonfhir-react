@@ -5,11 +5,15 @@ export class ItemInteger extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { answersData: this.props.answersData }
+        this.state = { answersData: this.props.answersData, item: this.props.item }
         this.setAnswerData = this.setAnswerData.bind(this);
+        this.props.elmRefArray.push({ id: this.setAnswerData.linkId, answersData: this.props.answersData, f: this.callEnableWhen });
     }
 
-
+    callEnableWhen(values) {
+        if (this.state?.item?.enableWhen)
+            console.log('Calling enable when child ' + this.state?.answersData?.linkId + '  ' + JSON.stringify(values));
+    }
     
 
     setAnswerData(event) {
@@ -25,6 +29,9 @@ export class ItemInteger extends Component {
         }
         
         this.setState({ answersData: this.state.answersData });
+        for (var i = 0; i < this.props.elmRefArray.length; i++) {
+            this.props.elmRefArray[i].f(this.state.answersData);
+        }
     }
 
 

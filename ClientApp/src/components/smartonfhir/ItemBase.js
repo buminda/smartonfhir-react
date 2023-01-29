@@ -17,14 +17,16 @@ export class ItemBase extends Component {
 
     evaluateEnableWhen(item, anwesrs) {
         //console.log('Calling enable conditions ' + JSON.stringify(anwesrs))
-        var enableWhenArray = item?.enableWhen;
+        var enableWhenArray = item?.enableWhen;   //item?.enableWhen[]
         var enabled = true;
         for (let i = 0; i < enableWhenArray.length; i++) {
             var enalbeCondition = enableWhenArray[i];
             var qLinkId = enalbeCondition.question;
             var operator = enalbeCondition.operator;
-            var answer = enalbeCondition.answerString;
-            var behavior = enalbeCondition.answerString;
+            //console.log("enalbeCondition " +JSON.stringify(enalbeCondition))
+            var answer = this.getEnableWhenAnswer(enalbeCondition); //inside answer, there can be answerBooleanm, answerDecinal, answerInteger, ... answerCoding
+            //console.log("enalbeCondition answer " + answer);
+            var behavior = enalbeCondition.enableBehavior;
 
             var userAnswer = null;
             for (let j = 0; j < anwesrs.length; j++) {
@@ -36,15 +38,16 @@ export class ItemBase extends Component {
                 }
             }
 
-            var foundMatch = false; 
+            var foundMatch = false;
+            
             if (userAnswer)
             {
                 
                 for (let j = 0; j < userAnswer.answer.length; j++) {
+                    var answerOperand = this.getAvailableAnswer(userAnswer.answer[j]);
                     if (operator === '=')
                     {
-                        //console.log('User answer, op =  ' + anwesrs[j]?.answer?.valueCoding?.code + '  ' + answer);
-                        if (userAnswer.answer[j].valueCoding?.code === answer)
+                        if (answer === answerOperand)
                         {
                             //console.log('User answer, op =  found' + userAnswer.answer[j].valueCoding?.code + '  ' + answer);
                             foundMatch = true;
@@ -52,12 +55,40 @@ export class ItemBase extends Component {
                         }
                     } else if (operator === '!=')
                     {
-                        if (userAnswer.answer[j].valueCoding?.code !== answer) {
-                            //console.log('User answer, op =  found' + userAnswer.answer[j].valueCoding?.code + '  ' + answer);
+                        if (answer !== answerOperand) {
                             foundMatch = true;
                             break;
                         }
                     }                    
+                    else if (operator === '>') { //boolean, decimal, integer, date, datetime, time, string
+                        if (answer > answerOperand) {
+                            foundMatch = true;
+                            break;
+                        }
+                    } 
+                    else if (operator === '<') {
+                        if (answer < answerOperand) {
+                            foundMatch = true;
+                            break;
+                        }
+                    } else if (operator === '>=') {
+                        if (answer >= answerOperand) {
+                            foundMatch = true;
+                            break;
+                        }
+                    }
+                    else if (operator === '<=') {
+                        if (answer <= answerOperand) {
+                            foundMatch = true;
+                            break;
+                        }
+                    }
+                    else if (operator === 'exists') {
+                        if (answer.includes( answerOperand )) {
+                            foundMatch = true;
+                            break;
+                        }
+                    }
                 }                
             }
             if (!foundMatch)
@@ -73,6 +104,46 @@ export class ItemBase extends Component {
             }
         }
         return enabled;
+    }
+
+    getAvailableAnswer(answer) {
+        if (answer.answerBoolean)
+            return answer.answerBoolean;
+        if (answer.answerDecimal)
+            return answer.answerDecimal;
+        if (answer.answerInteger)
+            return answer.answerInteger;
+        if (answer.answerDate)
+            return answer.answerDate;
+        if (answer.answerDateTime)
+            return answer.answerDateTime;
+        if (answer.answerDateTime)
+            return answer.answerDateTime;
+        if (answer.answerString)
+            return answer.answerString;
+        if (answer.valueCoding)
+            return answer.valueCoding.code;
+        return null;
+    }
+
+    getEnableWhenAnswer(answer) {
+        if (answer.answerBoolean)
+            return answer.answerBoolean;
+        if (answer.answerDecimal)
+            return answer.answerDecimal;
+        if (answer.answerInteger)
+            return answer.answerInteger;
+        if (answer.answerDate)
+            return answer.answerDate;
+        if (answer.answerDateTime)
+            return answer.answerDateTime;
+        if (answer.answerDateTime)
+            return answer.answerDateTime;
+        if (answer.answerDateTime)
+            return answer.answerDateTime;
+        if (answer.answerString)
+            return answer.answerString;
+        return null;
     }
 
     getAnswerForQuestion(linkId, item) {

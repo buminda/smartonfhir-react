@@ -7,19 +7,23 @@ export class ItemString extends ItemBase {
     constructor(props) {
         super(props);
         //console.log( "ItemString  -------------"+ JSON.stringify(this.props));
-
-        this.state = { answersData: this.props.answersData, visible: true, item: this.props.item }
+        this.state = { data: this.props.value, value: 'XX', answersData: this.props.answersData, visible: true, item: this.props.item }
+        //this.state = { answersData: this.props.answersData, visible: true, item: this.props.item }
         this.setAnswerData = this.setAnswerData.bind(this);
         this.textInput = React.createRef();
         this.label = React.createRef();
         this.callEnableWhen = this.callEnableWhen.bind(this);
         this.props.elmRefArray.push({ id: this.setAnswerData.linkId, answersData: this.props.answersData, f: this.callEnableWhen  });
-        console.log('Element reference list ' + this.props.answersData.linkId +'  -- ' + JSON.stringify(this.props.elmRefArray));
+        //console.log('Element reference list ' + this.props.answersData.linkId +'  -- ' + JSON.stringify(this.props.elmRefArray));
     }
 
-    callEnableWhen(values) {
-        if (this.state?.item?.enableWhen)
-            console.log('Calling enable when child ' + this.state?.answersData?.linkId + '  ' + JSON.stringify( values ));        
+    callEnableWhen(values) {        
+        if (this.state?.item?.enableWhen) {
+            //console.log('Calling enable when - Item string ' + this.state?.data?.linkId + '  ' + JSON.stringify(values));
+            //console.log('All answers ' + JSON.stringify(this.props.elmRefArray));
+            var enalbleResult = this.evaluateEnableWhen(this.state?.item, this.props.elmRefArray)
+            this.setState({ visible: enalbleResult });
+        }
     }
 
     setAnswerData(event) {     
@@ -44,14 +48,19 @@ export class ItemString extends ItemBase {
     render() {
         
         return (
-            <div className="row q-item-div">
-                <div className="col-md-3">
-                    <span ref={ this.label}> {this.state?.answersData?.linkId} {this.state?.answersData?.text} </span>
-                </div>
-                <div className="col-md-9">
-                    <input ref={this.textInput} key={this.state?.answersData?.linkId} className="form-control" type="text" onChange={this.setAnswerData} value={this.state?.answersData?.answer?.[0]?.valueString || ''}></input>
-                </div>
-            </div>                        
+            <div>
+            {
+                this.state.visible &&
+                    <div className="row q-item-div">
+                        <div className="col-md-3">
+                            <span ref={this.label}> {this.state?.answersData?.linkId} {this.state?.answersData?.text} </span>
+                        </div>
+                        <div className="col-md-9">
+                            <input ref={this.textInput} key={this.state?.answersData?.linkId} className="form-control" type="text" onChange={this.setAnswerData} value={this.state?.answersData?.answer?.[0]?.valueString || ''}></input>
+                        </div>
+                    </div>
+                }
+            </div>
         );
     }
 }

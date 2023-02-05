@@ -44,7 +44,9 @@ export class ItemBase extends Component {
             {
                 
                 for (let j = 0; j < userAnswer.answer.length; j++) {
+                    //console.log('answerOperand ' + JSON.stringify(userAnswer.answer[j]))
                     var answerOperand = this.getAvailableAnswer(userAnswer.answer[j]);
+                    console.log('answerOperand ' + answerOperand )
                     if (operator === '=')
                     {
                         if (answer === answerOperand)
@@ -67,7 +69,7 @@ export class ItemBase extends Component {
                         }
                     } 
                     else if (operator === '<') {
-                        if (answer < answerOperand) {
+                        if (answerOperand < answer) {
                             foundMatch = true;
                             break;
                         }
@@ -111,8 +113,13 @@ export class ItemBase extends Component {
             return answer.answerBoolean;
         if (answer.answerDecimal)
             return answer.answerDecimal;
-        if (answer.answerInteger)
-            return answer.answerInteger;
+        if (answer.valueInteger) {
+            if (Number.isInteger(answer.valueInteger))
+                return answer.valueInteger;
+            else
+                return parseInt(answer.valueInteger);
+            return answer.valueInteger;
+        }            
         if (answer.answerDate)
             return answer.answerDate;
         if (answer.answerDateTime)
@@ -132,7 +139,10 @@ export class ItemBase extends Component {
         if (answer.answerDecimal)
             return answer.answerDecimal;
         if (answer.answerInteger)
-            return answer.answerInteger;
+            if (Number.isInteger(answer.answerInteger))
+                return answer.answerInteger;
+            else
+                return parseInt(answer.answerInteger);            
         if (answer.answerDate)
             return answer.answerDate;
         if (answer.answerDateTime)

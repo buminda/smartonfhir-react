@@ -1,5 +1,7 @@
 ﻿import React, { Component } from 'react';
 import authService from './../api-authorization/AuthorizeService';
+import Base64 from 'crypto-js/enc-base64';
+import sha256 from 'crypto-js/sha256';
 
 export class Launch extends Component {
     
@@ -17,7 +19,8 @@ export class Launch extends Component {
             softwareVersion: '',
             softwareName: '',
             authUri: '', tokenUri: '',
-            count: 0
+            count: 0,
+            code_challenge:''
         }
         this.createRoom = this.createRoom.bind(this);
         this.grant = this.grant.bind(this);
@@ -28,6 +31,7 @@ export class Launch extends Component {
        await     this.loadConformance();
         await this.getAuthCode();
         localStorage.setItem("launchData", JSON.stringify(this.state));
+        this.generateCodeChallenge();
     }
 
     async grant() {
@@ -75,13 +79,34 @@ export class Launch extends Component {
         }, this);        
     }
 
+    generateCodeChallenge() {
+        let codeChallenge = Math.round(Math.random() * 10000000000).toString();
+        codeChallenge += "-" + Math.round(Math.random() * 10000000000).toString();
+        codeChallenge += "-" + Math.round(Math.random() * 10000000000).toString();
+        codeChallenge += "-" + Math.round(Math.random() * 10000000000).toString();
+        /*const encoder = new TextEncoder();
+        const encodedCodeChallenge = encoder.encode(codeChallenge);
+        window.crypto.subtle.digest('SHA-256', encodedCodeChallenge).then(hashBuffer => {
+            encodedCodeChallenge = this.base64UrlEncode(Array.from(new Uint8Array(hashBuffer)));
+            this.setState({ code_challenge: encodedCodeChallenge });
+        });   */
+        const hashDigest = sha256(codeChallenge);
+        const hmacDigest = Base64.stringify(hashDigest);
+        //encodedCodeChallenge = this.base64UrlEncode(Array.from(new Uint8Array(hashBuffer)));
+        this.setState({ code_challenge: hmacDigest });
+    }
+
     async getAuthCode() {
         var state = Math.round(Math.random() * 100000000).toString();
         var scope = [
-            "launch",
-            "launch/patient",
             "openid",
-            "fhirUser"
+            "profile",
+            "patient/Patient.read",
+            "patient/Flag.read",
+            "user/Practitioner.read",
+            "user/PractitionerRole.read",
+            "user/Organization.read",
+            "launch"
         ].join(" ");
         var authenticateFullUri = this.state.authUri + "?" +
             "response_type=code&" +
@@ -96,6 +121,14 @@ export class Launch extends Component {
         //window.location.href = authenticateFullUri;
     }
 
+    base64UrlEncode(str) {
+        if (!str) return '';
+        return str
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
+    }
+
     render() {
         return (
             <div>
@@ -107,6 +140,7 @@ export class Launch extends Component {
                 <p aria-live="polite">Auth: <strong>{this.state.authUri}</strong></p>
                 <p aria-live="polite">Token: <strong>{this.state.tokenUri}</strong></p>
                 <p aria-live="polite">Full Auth uri: <strong>{this.state.authenticateFullUri}</strong></p>
+                <p aria-live="polite">Code challenge: <strong>{this.state.code_challenge}</strong></p>
                 
                 <div className="line-break">{                    
                     this.state.authenticateFullUri && this.state.authenticateFullUri.split('?')[1].split('&').map(str => {
